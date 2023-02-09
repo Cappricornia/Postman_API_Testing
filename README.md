@@ -1,4 +1,4 @@
-# Postman-API-testing
+# Postman API Testing
 
 ## ISSUES
 
@@ -20,7 +20,7 @@
 
 ![getAllIssueLabels](https://user-images.githubusercontent.com/90700181/217920371-1644cc89-da7b-4496-a5a1-44901ed994f0.png)
 
-###POST
+### POST
 
 #### 1. Create_New_Issue
 #### >>> Body
@@ -58,7 +58,7 @@
 
 ![getAllRepos](https://user-images.githubusercontent.com/90700181/217923847-4b4e9613-274f-4729-9489-eb185d89c69a.png)
 
-#### 1. Get_Single_Repo
+#### 2. Get_Single_Repo
 #### >>> Tests
 
 ![getSingleRepo](https://user-images.githubusercontent.com/90700181/217924032-dd6888eb-d9ab-41e5-a661-104335788c10.png)
