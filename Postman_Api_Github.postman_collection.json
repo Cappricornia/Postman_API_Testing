@@ -1,0 +1,467 @@
+{
+	"info": {
+		"_postman_id": "dfe6eb5b-8c56-47d2-9e75-2e79fgg53g4d",
+		"name": "Postman_Api_Github",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "175823267"
+	},
+	"item": [
+		{
+			"name": "ISSUES",
+			"item": [
+				{
+					"name": "GET",
+					"item": [
+						{
+							"name": "Get_Single_Issue",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check that status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Check status OK\", function () {\r",
+											"    pm.expect(pm.response.status, \"Status property\").equals(\"OK\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"pm.test(\"Check first issue name and id\", function () {\r",
+											"const body = pm.response.json([0]);\r",
+											"console.log(body);\r",
+											"pm.expect(typeof(body.id, \"ID property\")).is.not.null;\r",
+											"pm.expect(typeof(body.name, \"Name property\")).equals(\"string\");\r",
+											"\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/repos/{{user}}/{{repoName}}/issues/1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"repos",
+										"{{user}}",
+										"{{repoName}}",
+										"issues",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get_All_Issues",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"\r",
+											" pm.test(\"Check if response is an array of issues\", function (){\r",
+											"    const body = pm.response.json();\r",
+											"    pm.expect(Array.isArray(body));\r",
+											"\r",
+											"    for (let item of body) {\r",
+											"        pm.expect(typeof(item.title)).equals(\"string\");\r",
+											"        pm.expect(typeof(item.number)).equals(\"number\");\r",
+											"        pm.expect(item.number, \"Issue number property\").is.greaterThan(0);\r",
+											"        \r",
+											"    }\r",
+											"\r",
+											"\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/repos/{{user}}/{{repoName}}/issues",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"repos",
+										"{{user}}",
+										"{{repoName}}",
+										"issues"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get_All_Labels_For_Issue",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Check all labels for an issue\", function (){\r",
+											"    const body = pm.response.json();\r",
+											"    pm.expect(Array.isArray(body));\r",
+											"    \r",
+											"    \r",
+											"    for (let label of body) {\r",
+											"    \r",
+											"        pm.expect(typeof(label.id, \"ID property\")).is.not.null;\r",
+											"        pm.expect(typeof(label.name, \"Name property\")).equals(\"string\");\r",
+											"        pm.expect(typeof(label.color, \"Color property\")).equals(\"string\");\r",
+											"        \r",
+											"    }\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/repos/{{user}}/{{repoName}}/issues/19/labels",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"repos",
+										"{{user}}",
+										"{{repoName}}",
+										"issues",
+										"19",
+										"labels"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "POST",
+					"item": [
+						{
+							"name": "Create_New_Issue",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"var random = Math.random().toString(36).substring(2);\r",
+											"\r",
+											"var issueTitle = \"Some issue \" + random;\r",
+											"\r",
+											"pm.environment.set(\"RandomissueTItle\", issueTitle)"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Check issue number and title\", function (){\r",
+											"    let body = pm.response.json();\r",
+											"    \r",
+											"    pm.expect(body.number, \"Number property\").is.greaterThan(0);\r",
+											"    pm.expect(body.title, \"Title property\").equals(pm.environment.get(\"RandomissueTItle\"));\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\": \"{{RandomissueTItle}}\"\r\n    \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/repos/{{user}}/{{repoName}}/issues",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"repos",
+										"{{user}}",
+										"{{repoName}}",
+										"issues"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create_New_Issue_With_Labels",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Check issue labels\", function (){\r",
+											"    const body = pm.response.json();\r",
+											"    \r",
+											"    pm.expect(body.number, \"Number property\").is.greaterThan(0);\r",
+											"    pm.expect(body.title, \"Title property\").equals(\"Issue with labels\");\r",
+											"    pm.expect(body.labels[0].name, \"Labels property\").equals(\"bug\");\r",
+											"    pm.expect(body.labels[1].name, \"Labels property\").equals(\"priority: critical\");\r",
+											"\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\": \"Issue with labels\",\r\n\r\n    \"labels\":\r\n     [\r\n        \"bug\",\r\n        \"priority: critical\"\r\n    ]\r\n        \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/repos/{{user}}/{{repoName}}/issues",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"repos",
+										"{{user}}",
+										"{{repoName}}",
+										"issues"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create_New_Issue_Missing_Title",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Check issue title is empty\", function (){\r",
+											"    let body = pm.response.json();\r",
+											"    console.log(body);\r",
+											"\r",
+											"    const alphanumeric = /^[\\p{L}\\p{N}]*$/u;\r",
+											"    \r",
+											"    pm.expect(body.number, \"Number property\").is.greaterThan(0);\r",
+											"\r",
+											"    pm.expect(body.title, \"Title property\").match(alphanumeric);\r",
+											"    \r",
+											"})\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\": \"IssueNoTitle\"\r\n    \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/repos/{{user}}/{{repoName}}/issues",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"repos",
+										"{{user}}",
+										"{{repoName}}",
+										"issues"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "REPOS",
+			"item": [
+				{
+					"name": "GET",
+					"item": [
+						{
+							"name": "Get_All_Repos",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Check if response is an array of issues\", function (){\r",
+											"    const body = pm.response.json();\r",
+											"    pm.expect(Array.isArray(body));\r",
+											"\r",
+											"    for (let repo of body) {\r",
+											"        pm.expect(typeof(repo.name)).equals(\"string\");\r",
+											"    }\r",
+											"\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/users/{{user}}/repos",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										"{{user}}",
+										"repos"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get_Single_Repo",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Verify repo name\", function (){\r",
+											"    const body = pm.response.json();\r",
+											"    pm.expect(body.name, \"Name property\").equals(\"Postman-API-testing\");\r",
+											"\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Check issue id is positive number\", function (){\r",
+											"   const body = pm.response.json();\r",
+											"   pm.expect(body.id, \"Id property\").is.greaterThan(0);\r",
+											"\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/repos/{{user}}/{{repoName}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"repos",
+										"{{user}}",
+										"{{repoName}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}
